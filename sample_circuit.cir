@@ -1,0 +1,10 @@
+4,2
+Hadamard(0)
+Hadamard(1)
+
+Hadamard(2)
+Hadamard(3)
+# Test
+
+CNOT(1,2)
+Hadamard(0)
