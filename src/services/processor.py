@@ -11,11 +11,6 @@ class Processor:
         
     def apply_gate(self, gate, qubits: list | int):
         # Fetch the class type with the provided gate string name
-        #
-        # Example:
-        #   gate = "Hadamard"
-        #   qml_type = type(qml.Hadamard)
-        # Where qml is a module
         qml_type = getattr(qml, gate)(qubits)
         self.pennylane_gates.append(qml_type)
         self.gates.append(graph.NodeGate(gate, qml_type, qubits))
