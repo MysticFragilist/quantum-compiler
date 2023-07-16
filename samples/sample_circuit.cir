@@ -8,3 +8,8 @@ Hadamard(3)
 
 CNOT(1,2)
 Hadamard(0)
+
+Hadamard(3)
+Hadamard(3)
+
+CNOT(2,3)

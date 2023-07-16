@@ -1,11 +1,13 @@
 import pennylane as qml
+from gates import graph
 
 class Processor:
     def __init__(self, qubits: int, cbits: int):
         self.qubits = qubits
         self.cbits = cbits
         self.device = qml.device('default.qubit', wires=qubits)
-        self.operators = []
+        self.pennylane_gates = []
+        self.gates = []
         
     def apply_gate(self, gate, qubits: list | int):
         # Fetch the class type with the provided gate string name
@@ -15,14 +17,14 @@ class Processor:
         #   qml_type = type(qml.Hadamard)
         # Where qml is a module
         qml_type = getattr(qml, gate)(qubits)
-        self.operators.append(qml_type)
-        print(qml_type)
+        self.pennylane_gates.append(qml_type)
+        self.gates.append(graph.NodeGate(gate, qml_type, qubits))
 
     def build_circuit(self):
         # Create a quantum circuit and apply the gates
         @qml.qnode(self.device)
         def circuit():
-            for operator in self.operators:
-                operator
+            for gate in self.pennylane_gates:
+                gate
             return qml.probs(wires=range(self.qubits))
         return circuit()

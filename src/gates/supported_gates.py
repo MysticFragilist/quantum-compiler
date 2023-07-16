@@ -1,0 +1,6 @@
+hadamard = "Hadamard"
+pauli_x = "PauliX"
+pauli_y = "PauliY"
+pauli_z = "PauliZ"
+t_gate = "T"
+s_gate = "S"

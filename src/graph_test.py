@@ -1,5 +1,5 @@
-from processor import Processor
-
+from gates import graph
+from services import processor as ProcessorBL
 
 def read_input_file(filename):
     """Reads the input file and returns the list of lines."""
@@ -7,11 +7,10 @@ def read_input_file(filename):
         lines = file.readlines()
         header = lines[0].replace('\n', '').split(',')
         return (int(header[0]), int(header[1]), lines[1:])
-    
 
-(qubit_nb, bits_nb, lines) = read_input_file("sample_circuit.cir")
+(qubit_nb, bits_nb, lines) = read_input_file("..\\samples\\sample_circuit.cir")
 
-processor = Processor(qubit_nb, bits_nb)
+processor = ProcessorBL.Processor(qubit_nb, bits_nb)
 
 for line in lines:
     line = line.replace('\n', '')
@@ -31,4 +30,6 @@ for line in lines:
         processor.apply_gate(gate_line[0], dissected_qubits)
 
 
-processor.build_circuit()
+gg = graph.Graph(processor.gates, qubit_nb)
+
+gg.draw_graph()
