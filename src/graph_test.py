@@ -1,5 +1,8 @@
 from gates import graph
 from services import processor as ProcessorBL
+import sys
+
+path = sys.argv[-1]
 
 def read_input_file(filename):
     """Reads the input file and returns the list of lines."""
@@ -8,7 +11,7 @@ def read_input_file(filename):
         header = lines[0].replace('\n', '').split(',')
         return (int(header[0]), int(header[1]), lines[1:])
 
-(qubit_nb, bits_nb, lines) = read_input_file("..\\samples\\sample_circuit.cir")
+(qubit_nb, bits_nb, lines) = read_input_file(path)
 
 processor = ProcessorBL.Processor(qubit_nb, bits_nb)
 

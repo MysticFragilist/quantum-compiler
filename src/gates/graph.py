@@ -28,8 +28,8 @@ class Graph:
                 continue
             node = queue[-1]
             index = len(queue)
-            node.height_index = index
-            self.G.add_edge(node, self.end)
+            
+            self.G.add_edge(str(node), str(self.end))
 
     def build_node(self, gate, wire):
         queue = self.queues[wire]
@@ -37,7 +37,7 @@ class Graph:
             self.root.add_child(gate)
             gate.height_index = 0
             print(gate)
-            self.G.add_edge(self.root, gate)
+            self.G.add_edge(str(self.root), str(gate))
             queue.append(gate)
             self.nodes.append(gate)
             return
@@ -49,51 +49,49 @@ class Graph:
         if gate.height_index == -1:
             gate.height_index = index
         print(gate)
-        self.G.add_edge(last_parent_on_wire, gate)
+        self.G.add_edge(str(last_parent_on_wire), str(gate))
         queue.append(last_parent_on_wire)
         queue.append(gate)
         self.nodes.append(gate)
 
     def build_positions(self):
-        node_positions =  {'root': (-1, 1), 'end': (2, 1)}
+        node_positions =  {'root(None.-1)': (-1, 1), 'end(None.-1)': (2, 1)}
         max_depth = 0
         for node in self.G.nodes:
-            if node == 'root':
+            if 'root' in node:
                 continue
-            if node == 'end':
+            if 'end' in node:
                 continue
-            split_node = node.split('-')
-            print(split_node)
-            wire = split_node[1].split('(')[1].split(')')[0]
-            max_depth = max(max_depth, int(split_node[0]))
+            node_split = node.split('(')
+            
+            arguments = node_split[1].split('.')
+            wire = arguments[0]
+            current_depth = int(arguments[1].replace(')', ''))
+            max_depth = max(max_depth, current_depth)
             if str(wire).isdigit():
-                node_positions[node] = (int(split_node[0]), int(wire))
+                node_positions[node] = (current_depth, int(wire))
                 continue
             else:
-                print(wire)
                 split_wire = wire.replace('[', '').replace(']', '').replace(' ', '').split(',')
                 split_wire = [int(i) for i in split_wire]
-                node_positions[node] = (int(split_node[0]), mean(split_wire))
+                node_positions[node] = (current_depth, mean(split_wire))
                 continue
-            
         
-        node_positions['root'] = (-1, mean([node_positions[i][1] for i in node_positions]))
-        node_positions['end'] = (max_depth + 1, mean([node_positions[i][1] for i in node_positions]))
+        node_positions['root(None.-1)'] = (-1, mean([node_positions[i][1] for i in node_positions]))
+        node_positions['end(None.-1)'] = (max_depth + 1, mean([node_positions[i][1] for i in node_positions]))
         return node_positions
     
     def draw_graph(self):
         print(list(map(lambda x: str(x), list(dict.fromkeys(self.G.nodes)))))
-        self.G.nodes = list(dict.fromkeys(self.G.nodes))
         
         # remove all duplicate nodes from self.G.nodes
-        self.G.nodes = list(dict.fromkeys(self.G.nodes))
+        node_positions = self.build_positions()
+        # node_positions = nx.spring_layout(self.G)
 
-        # node_positions = self.build_positions()
-        node_positions = nx.spring_layout(self.G)
         # Set the offset for label positions
         label_offset = 0.1
 
-        node_colors = ['black' if node == 'root' or node == 'end' else 'lightblue' for node in self.G.nodes]
+        node_colors = ['black' if node == 'root(None.-1)' or node == 'end(None.-1)' else 'lightblue' for node in self.G.nodes]
 
         nx.draw(self.G, node_positions, node_color=node_colors, edgecolors='black', with_labels=False, arrows=True, node_size=150)
 
