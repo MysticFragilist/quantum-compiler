@@ -14,7 +14,6 @@ class Graph:
 
     def build_nodes(self, gates):
         for gate in gates:
-            print(gate)
             if isinstance(gate.wire, list):
                 for wire in gate.wire:
                     self.build_node(gate, wire)
@@ -22,19 +21,23 @@ class Graph:
             if isinstance(gate.wire, int):
                 self.build_node(gate, gate.wire)
                 continue
-        
+
+        self.end = NodeGate("end", None, None)
         for queue in self.queues:
             if len(queue) == 0:
                 continue
             node = queue[-1]
             index = len(queue)
-            self.G.add_edge(str(index - 1) + '-' + str(node), 'end')
+            node.height_index = index
+            self.G.add_edge(node, self.end)
 
     def build_node(self, gate, wire):
         queue = self.queues[wire]
         if len(queue) == 0:
             self.root.add_child(gate)
-            self.G.add_edge('root', '0-' + str(gate))
+            gate.height_index = 0
+            print(gate)
+            self.G.add_edge(self.root, gate)
             queue.append(gate)
             self.nodes.append(gate)
             return
@@ -42,7 +45,11 @@ class Graph:
         index = len(queue)
         last_parent_on_wire = queue.pop()
         last_parent_on_wire.add_child(gate)
-        self.G.add_edge(str(index - 1) + '-' + str(last_parent_on_wire), str(index) + '-' + str(gate))
+        # if the height is already present we are not updating it to prevent hash change
+        if gate.height_index == -1:
+            gate.height_index = index
+        print(gate)
+        self.G.add_edge(last_parent_on_wire, gate)
         queue.append(last_parent_on_wire)
         queue.append(gate)
         self.nodes.append(gate)
@@ -75,8 +82,14 @@ class Graph:
         return node_positions
     
     def draw_graph(self):
-        node_positions = self.build_positions()
+        print(list(map(lambda x: str(x), list(dict.fromkeys(self.G.nodes)))))
+        self.G.nodes = list(dict.fromkeys(self.G.nodes))
+        
+        # remove all duplicate nodes from self.G.nodes
+        self.G.nodes = list(dict.fromkeys(self.G.nodes))
 
+        # node_positions = self.build_positions()
+        node_positions = nx.spring_layout(self.G)
         # Set the offset for label positions
         label_offset = 0.1
 
@@ -88,13 +101,13 @@ class Graph:
             x, y = pos
             plt.text(x, y + label_offset, str(node), ha='center', va='bottom')
         padding = 0.5  # Additional padding around the nodes
-        x_values, y_values = zip(*node_positions.values())
-        min_x = min(x_values) - padding
-        max_x = max(x_values) + padding
-        min_y = min(y_values) - padding
-        max_y = max(y_values) + padding
-        plt.xlim(min_x, max_x)
-        plt.ylim(min_y, max_y)
+        # x_values, y_values = zip(*node_positions.values())
+        # min_x = min(x_values) - padding
+        # max_x = max(x_values) + padding
+        # min_y = min(y_values) - padding
+        # max_y = max(y_values) + padding
+        # plt.xlim(min_x, max_x)
+        # plt.ylim(min_y, max_y)
 
         # Show the plot
         plt.show()

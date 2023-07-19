@@ -3,6 +3,7 @@ class NodeGate:
         self.name = gate_name
         self.wire = wire
         self.gate = gate
+        self.height_index = -1
         self.children = []
 
     def add_child(self, node) -> None:
@@ -14,7 +15,7 @@ class NodeGate:
         self.children.append(node)
 
     def __str__(self) -> str:
-        return f"{self.name}({self.wire})"
+        return f"{self.name}({self.wire}.{self.height_index})"
 
     def __eq__(self, other):
         isNode = isinstance(other, self.__class__)
@@ -24,4 +25,13 @@ class NodeGate:
         if self.name != other.name:
             return False
         
+        if self.wire != other.wire:
+            return False
+        
+        if self.height_index != other.height_index:
+            return False
+        
         return True
+    
+    def __hash__(self):
+        return hash(str(self))
