@@ -29,7 +29,7 @@ class Graph:
             node = queue[-1]
             index = len(queue)
             
-            self.G.add_edge(str(node), str(self.end))
+            self.G.add_edge(str(node), 'end')
 
     def build_node(self, gate, wire):
         queue = self.queues[wire]
@@ -37,7 +37,7 @@ class Graph:
             self.root.add_child(gate)
             gate.height_index = 0
             print(gate)
-            self.G.add_edge(str(self.root), str(gate))
+            self.G.add_edge('root', str(gate))
             queue.append(gate)
             self.nodes.append(gate)
             return
@@ -48,6 +48,7 @@ class Graph:
         # if the height is already present we are not updating it to prevent hash change
         if gate.height_index == -1:
             gate.height_index = index
+            
         print(gate)
         self.G.add_edge(str(last_parent_on_wire), str(gate))
         queue.append(last_parent_on_wire)
@@ -55,7 +56,7 @@ class Graph:
         self.nodes.append(gate)
 
     def build_positions(self):
-        node_positions =  {'root(None.-1)': (-1, 1), 'end(None.-1)': (2, 1)}
+        node_positions =  {'root': (-1, 1), 'end': (2, 1)}
         max_depth = 0
         for node in self.G.nodes:
             if 'root' in node:
@@ -77,12 +78,12 @@ class Graph:
                 node_positions[node] = (current_depth, mean(split_wire))
                 continue
         
-        node_positions['root(None.-1)'] = (-1, mean([node_positions[i][1] for i in node_positions]))
-        node_positions['end(None.-1)'] = (max_depth + 1, mean([node_positions[i][1] for i in node_positions]))
+        node_positions['root'] = (-1, mean([node_positions[i][1] for i in node_positions]))
+        node_positions['end'] = (max_depth + 1, mean([node_positions[i][1] for i in node_positions]))
         return node_positions
     
     def draw_graph(self):
-        print(list(map(lambda x: str(x), list(dict.fromkeys(self.G.nodes)))))
+        # print(list(map(lambda x: str(x), list(dict.fromkeys(self.G.nodes)))))
         
         # remove all duplicate nodes from self.G.nodes
         node_positions = self.build_positions()
@@ -91,21 +92,22 @@ class Graph:
         # Set the offset for label positions
         label_offset = 0.1
 
-        node_colors = ['black' if node == 'root(None.-1)' or node == 'end(None.-1)' else 'lightblue' for node in self.G.nodes]
+        node_colors = ['black' if node == 'root' or node == 'end' else 'lightblue' for node in self.G.nodes]
 
         nx.draw(self.G, node_positions, node_color=node_colors, edgecolors='black', with_labels=False, arrows=True, node_size=150)
 
         for node, pos in node_positions.items():
             x, y = pos
-            plt.text(x, y + label_offset, str(node), ha='center', va='bottom')
+            plt.text(x, y + label_offset, node, ha='center', va='bottom')
+        
         padding = 0.5  # Additional padding around the nodes
-        # x_values, y_values = zip(*node_positions.values())
-        # min_x = min(x_values) - padding
-        # max_x = max(x_values) + padding
-        # min_y = min(y_values) - padding
-        # max_y = max(y_values) + padding
-        # plt.xlim(min_x, max_x)
-        # plt.ylim(min_y, max_y)
+        x_values, y_values = zip(*node_positions.values())
+        min_x = min(x_values) - padding
+        max_x = max(x_values) + padding
+        min_y = min(y_values) - padding
+        max_y = max(y_values) + padding
+        plt.xlim(min_x, max_x)
+        plt.ylim(min_y, max_y)
 
         # Show the plot
         plt.show()

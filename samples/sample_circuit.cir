@@ -13,3 +13,10 @@ Hadamard(3)
 Hadamard(3)
 
 CNOT(2,3)
+
+
+Hadamard(2)
+Hadamard(3)
+
+Hadamard(2)
+Hadamard(3)
