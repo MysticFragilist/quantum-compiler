@@ -1,11 +1,12 @@
 from gates.graph import Graph
+from operations.duplicate import Duplicate
 from operations.lemma1 import Lemma1
 
 class Compilator:
-    def __init__(self, gates):
-        self.gates = gates
-        self.graph = Graph(self.gates)
+    def __init__(self, graph):
+        self.graph = graph
         self.operations = [
+            Duplicate(self.graph),
             Lemma1(self.graph)
         ]
 

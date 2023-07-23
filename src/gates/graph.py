@@ -36,7 +36,6 @@ class Graph:
         if len(queue) == 0:
             self.root.add_child(gate)
             gate.height_index = 0
-            print(gate)
             self.G.add_edge('root', str(gate))
             queue.append(gate)
             self.nodes.append(gate)
@@ -49,7 +48,6 @@ class Graph:
         if gate.height_index == -1:
             gate.height_index = index
             
-        print(gate)
         self.G.add_edge(str(last_parent_on_wire), str(gate))
         queue.append(last_parent_on_wire)
         queue.append(gate)
@@ -82,7 +80,7 @@ class Graph:
         node_positions['end'] = (max_depth + 1, mean([node_positions[i][1] for i in node_positions]))
         return node_positions
     
-    def draw_graph(self):
+    def draw_graph(self, title="Graph"):
         # print(list(map(lambda x: str(x), list(dict.fromkeys(self.G.nodes)))))
         
         # remove all duplicate nodes from self.G.nodes
@@ -110,4 +108,5 @@ class Graph:
         plt.ylim(min_y, max_y)
 
         # Show the plot
+        plt.title(title)
         plt.show()

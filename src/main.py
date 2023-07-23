@@ -1,34 +1,40 @@
+from gates import graph
 from services import processor as ProcessorBL
+import sys
+import os
+import pennylane as qml
 
+from services.compilator import Compilator
+from services.transpiler import Transpiler
 
-def read_input_file(filename):
-    """Reads the input file and returns the list of lines."""
-    with open(filename) as file:
-        lines = file.readlines()
-        header = lines[0].replace('\n', '').split(',')
-        return (int(header[0]), int(header[1]), lines[1:])
-    
+input_file = sys.argv[-1]
+# Process input file
+processor = ProcessorBL.Processor()
+processor.apply_gates(input_file)
 
-(qubit_nb, bits_nb, lines) = read_input_file("sample_circuit.cir")
+# Build the graph and show it
+in_graph = graph.Graph(processor.gates, processor.qubits)
+in_graph.draw_graph("Input Graph")
 
-processor = ProcessorBL.Processor(qubit_nb, bits_nb)
+# Compile the graph into a smaller form
+compilator = Compilator(in_graph)
+compilator.compile()
 
-for line in lines:
-    line = line.replace('\n', '')
-    if line == '':
-        continue
-    if line.find('#') != -1:
-        continue
-    
-    gate_line = line.split('(')
-    gate_line[1] = gate_line[1].replace(')', '').split(',')
-    dissected_qubits = []
-    for i in range(len(gate_line[1])):
-        dissected_qubits.append(int(gate_line[1][i]))
-    if len(dissected_qubits) == 1:
-        processor.apply_gate(gate_line[0], dissected_qubits[0])
-    else:
-        processor.apply_gate(gate_line[0], dissected_qubits)
+#process the output compiled into a new processor to generate a smaller end circuit
+processorOut = ProcessorBL.Processor()
+# init the circuit manually since we will add gates manually
+processorOut.init_circuit(processor.qubits, processor.cbits)
 
+for node in in_graph.nodes:
+    processorOut.apply_gate(node.gate.name, node.wire)
 
-processor.build_circuit()
+# transpile the output processor into a new OUTPUT file
+out_file = os.path.basename(input_file)
+transpiler = Transpiler(out_file, processorOut.gates)
+transpiler.build_file(processor.qubits, processor.cbits)
+
+# Process the new output file and build the new graph  
+processorOut = ProcessorBL.Processor()
+processorOut.apply_gates(transpiler.output_file)
+out_graph = graph.Graph(processorOut.gates, processorOut.qubits)
+out_graph.draw_graph("Output Graph")
