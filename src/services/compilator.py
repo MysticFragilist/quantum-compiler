@@ -14,5 +14,6 @@ class Compilator:
         """Compiles the operations list into a quantum circuit."""
         for operation in self.operations:
             operation.apply()
+        print("Compilation done.")
 
         pass

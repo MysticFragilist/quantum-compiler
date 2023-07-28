@@ -91,6 +91,7 @@ class Graph:
         label_offset = 0.1
 
         node_colors = ['black' if node == 'root' or node == 'end' else 'lightblue' for node in self.G.nodes]
+        fig = plt.figure(title)
 
         nx.draw(self.G, node_positions, node_color=node_colors, edgecolors='black', with_labels=False, arrows=True, node_size=150)
 
@@ -108,5 +109,4 @@ class Graph:
         plt.ylim(min_y, max_y)
 
         # Show the plot
-        plt.title(title)
         plt.show()
