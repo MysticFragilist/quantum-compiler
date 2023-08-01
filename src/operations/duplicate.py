@@ -10,9 +10,10 @@ class Duplicate(Operation):
     def _navigate_breadth_first(self, node):
         for child in node.children:
             if child.name == node.name:
-                node.children = child.children
+                node.parent.children = child.children
                 self.gates_graph.nodes.remove(child)
+                self.gates_graph.nodes.remove(node)
                 
-                self._navigate_breadth_first(node)
+                self._navigate_breadth_first(node.parent)
                 continue
             self._navigate_breadth_first(child)

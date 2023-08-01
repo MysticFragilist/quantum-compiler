@@ -8,7 +8,8 @@ class Lemma1(Operation):
         print("Applying Lemma 1")
 
         # Find patterns
-        self._navigate_breadth_first(self.gates_graph.root.children[0], [])
+        for child in self.gates_graph.root.children:
+            self._navigate_breadth_first(child, [])
 
 
     def _navigate_breadth_first(self, node, saved_nodes):
@@ -39,7 +40,9 @@ class Lemma1(Operation):
                 child.parent = new_node
             
             saved_nodes = []
-            self._navigate_breadth_first(self.gates_graph.root.children[0], [])
+            # Retrigger the search
+            for child in self.gates_graph.root.children:
+                self._navigate_breadth_first(child, [])
             return
         
         if not node.gate or not self._is_clifford(node.gate):
