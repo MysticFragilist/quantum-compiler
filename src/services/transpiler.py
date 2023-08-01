@@ -16,10 +16,10 @@ class Transpiler:
         f.write("# the content was auto generated to reduce gates depth.\n")
         
         for gate in self.gates:
-            print(gate.name)
             if isinstance(gate.wire, list):
                 f.write(f"{gate.name}({gate.wire[0]}, {gate.wire[1]})\n")
             elif isinstance(gate.wire, int):
                 f.write(f"{gate.name}({gate.wire})\n")
         
         f.close()
+        print(f"Output file generated at {self.output_file}")

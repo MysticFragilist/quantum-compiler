@@ -20,6 +20,8 @@ in_graph.draw_graph("Input Graph")
 compilator = Compilator(in_graph)
 compilator.compile()
 
+print([str(item) for item in in_graph.nodes])
+
 #process the output compiled into a new processor to generate a smaller end circuit
 processorInt = ProcessorBL.Processor()
 # init the circuit manually since we will add gates manually
@@ -36,6 +38,5 @@ transpiler.build_file(processorInt.qubits, processorInt.cbits)
 # Process the new output file and build the new graph
 processorOut = ProcessorBL.Processor()
 processorOut.apply_gates(transpiler.output_file)
-print(processorOut.gates)
 out_graph = graph.Graph(processorOut.gates, processorOut.qubits)
 out_graph.draw_graph("Output Graph")

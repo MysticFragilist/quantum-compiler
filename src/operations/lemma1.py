@@ -8,45 +8,58 @@ class Lemma1(Operation):
         print("Applying Lemma 1")
 
         # Find patterns
-        self._navigate_breadth_first(self.gates_graph.root, [])
+        self._navigate_breadth_first(self.gates_graph.root.children[0], [])
 
 
     def _navigate_breadth_first(self, node, saved_nodes):
         saved_nodes = saved_nodes[:]
         print([str(item) for item in saved_nodes])
         if len(saved_nodes) == 4:
-            p_1 = saved_nodes[0].gate
-            p_2 = saved_nodes[1].gate
+            p_1 = saved_nodes[-1].gate
+            p_2 = saved_nodes[-2].gate
             exponent = self._lambda_function(p_1, p_2)
+            
             new_gate = (-1) ** exponent * qml.Identity(saved_nodes[0].wire)
             
-            new_node = NodeGate("Identity", new_gate.name, new_gate.wire)
-
+            new_node = NodeGate("Identity", new_gate, saved_nodes[0].wire)
+            
             before_pattern_match_first_node = saved_nodes[0].parent
             before_pattern_match_first_node.children.remove(saved_nodes[0])
             before_pattern_match_first_node.add_child(new_node)
-            new_node.children = saved_nodes[-1].children
 
+            new_node.height_index = before_pattern_match_first_node.height_index + 1
+            new_node.children = saved_nodes[-1].children
+            
+            # Remove the nodes from the graph
+            for node in saved_nodes:
+                self.gates_graph.nodes.remove(node)
+
+            
             for child in new_node.children:
                 child.parent = new_node
-
+            
+            saved_nodes = []
+            self._navigate_breadth_first(self.gates_graph.root.children[0], [])
+            return
+        
         if not node.gate or not self._is_clifford(node.gate):
-            pass
+            return
+        
+        if len(saved_nodes) == 0:
+            saved_nodes.append(node)
 
-        saved_nodes.append(node)
         for child in node.children:
             if child.name != node.name and len(saved_nodes) > 1:
                 print(child.name, saved_nodes[-2].name)
                 if child.name == saved_nodes[-2].name:
                     saved_nodes.append(child)
                     self._navigate_breadth_first(child, saved_nodes)
-                    continue
             elif child.name != node.name and len(saved_nodes) == 1:
                 saved_nodes.append(child)
                 self._navigate_breadth_first(child, saved_nodes)
-                continue
-            saved_nodes = []
-            self._navigate_breadth_first(child, saved_nodes)
+            else:
+                saved_nodes = []
+                self._navigate_breadth_first(child, saved_nodes)
 
 
     def _is_clifford(self, gate) -> bool:
