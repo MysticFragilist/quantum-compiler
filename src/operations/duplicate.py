@@ -13,6 +13,8 @@ class Duplicate(Operation):
                 node.parent.children = child.children
                 self.gates_graph.nodes.remove(child)
                 self.gates_graph.nodes.remove(node)
+                for child in node.parent.children:
+                    child.parent = node.parent
                 
                 self._navigate_breadth_first(node.parent)
                 continue
