@@ -5,7 +5,7 @@ import os
 import pennylane as qml
 
 from services.compilator import Compilator
-from services.transpiler import Transpiler
+from services.synthesiser import Synthesiser
 
 input_file = sys.argv[-1]
 # Process input file
@@ -32,7 +32,7 @@ for node in in_graph.nodes:
 
 # transpile the output processor into a new OUTPUT file
 out_file = os.path.basename(input_file)
-transpiler = Transpiler(out_file, processorInt.gates)
+transpiler = Synthesiser(out_file, processorInt.gates)
 transpiler.build_file(processorInt.qubits, processorInt.cbits)
 
 # Process the new output file and build the new graph

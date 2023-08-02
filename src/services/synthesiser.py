@@ -1,7 +1,7 @@
 import os
 
 
-class Transpiler:
+class Synthesiser:
     
     def __init__(self, file_name, gates: list):
         self.out_folder = os.path.join('..', 'out')
