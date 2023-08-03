@@ -24,7 +24,7 @@ To use the compilation on your file
 python src/main.py relative/path/to/file.cir
 ```
 It will generate first a graph from the inputted circuit using the analyser. Here's an example: 
-![image](https://github.com/MysticFragilist/quantum-compiler/assets/25663435/43b705ba-a145-413c-8b1d-8420f017839a)
+![image](./graph_pcoast_example.png)
 
 
 ### Limitation
