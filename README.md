@@ -3,7 +3,12 @@ A quantum compiler implementation of PCOAST (Pauli-based Quantum Circuit Optimiz
 Not everthing is implemented yet. The following is a list of what is implemented and what is not.
 
 ## Installation
-First start by creating an environment and 
+First start by creating an environment then import requirements.txt
+```
+python -m venv venv
+source venv/scripts/activate
+pip install -r requirements.txt
+```
 
 ### Usage
 Create a file that will be the definition of your circuit. For example:
