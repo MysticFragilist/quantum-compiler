@@ -9,7 +9,7 @@ from services.transpiler import Transpiler
 
 input_file = sys.argv[-1]
 # Process input file
-processor = ProcessorBL.Processor()
+processor = ProcessorBL.SemanticAnalyser()
 processor.apply_gates(input_file)
 
 # Build the graph and show it
@@ -23,7 +23,7 @@ compilator.compile()
 print([str(item) for item in in_graph.nodes])
 
 #process the output compiled into a new processor to generate a smaller end circuit
-processorInt = ProcessorBL.Processor()
+processorInt = ProcessorBL.SemanticAnalyser()
 # init the circuit manually since we will add gates manually
 processorInt.init_circuit(processor.qubits, processor.cbits)
 
@@ -36,7 +36,7 @@ transpiler = Transpiler(out_file, processorInt.gates)
 transpiler.build_file(processorInt.qubits, processorInt.cbits)
 
 # Process the new output file and build the new graph
-processorOut = ProcessorBL.Processor()
+processorOut = ProcessorBL.SemanticAnalyser()
 processorOut.apply_gates(transpiler.output_file)
 out_graph = graph.Graph(processorOut.gates, processorOut.qubits)
 out_graph.draw_graph("Output Graph")

@@ -1,7 +1,7 @@
 import pennylane as qml
 from gates import graph
 
-class Processor:
+class SemanticAnalyser:
     def __init__(self):
         self.qubits = 1
         self.cbits = 1

@@ -13,7 +13,7 @@ def read_input_file(filename):
 
 (qubit_nb, bits_nb, lines) = read_input_file(path)
 
-processor = ProcessorBL.Processor(qubit_nb, bits_nb)
+processor = ProcessorBL.SemanticAnalyser(qubit_nb, bits_nb)
 
 for line in lines:
     line = line.replace('\n', '')
