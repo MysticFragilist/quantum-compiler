@@ -2,10 +2,10 @@ from gates.node_gate import NodeGate
 from operations.operation import Operation
 import pennylane as qml
 
-class Lemma1(Operation):    
+class PauliGroupReduction(Operation):    
     def apply(self):
         """Applies Lemma 1 to the graph."""
-        print("Applying Lemma 1")
+        print("Applying Pauli Group reduction")
 
         # Find patterns
         for child in self.gates_graph.root.children:

@@ -1,7 +1,7 @@
 from operations.operation import Operation
 
 
-class Duplicate(Operation):
+class DuplicateOwnCommuteGate(Operation):
     def apply(self):
         """Remove all duplicate nodes from the graph if the gate is a pi rotation."""
         print("Applying Duplicates")

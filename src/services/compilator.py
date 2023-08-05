@@ -1,13 +1,13 @@
 from gates.graph import Graph
-from operations.duplicate import Duplicate
-from operations.lemma1 import Lemma1
+from operations.duplicate_own_commute import DuplicateOwnCommuteGate
+from operations.pauli_group_reduction import PauliGroupReduction
 
 class Compilator:
     def __init__(self, graph):
         self.graph = graph
         self.operations = [
-            Duplicate(self.graph),
-            Lemma1(self.graph)
+            DuplicateOwnCommuteGate(self.graph),
+            PauliGroupReduction(self.graph)
         ]
 
     def compile(self):
