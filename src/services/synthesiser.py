@@ -4,7 +4,7 @@ import os
 class Synthesiser:
     
     def __init__(self, file_name, gates: list):
-        self.out_folder = os.path.join('..', 'out')
+        self.out_folder = os.path.join('.', 'out')
         self.gates = gates
         self.file_name = file_name
 

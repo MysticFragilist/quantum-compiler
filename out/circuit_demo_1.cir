@@ -1,3 +1,4 @@
-1,1
+2,1
 # this file was compiled using the mini-pcoast compiler.
 # the content was auto generated to reduce gates depth.
+Hadamard(0)
